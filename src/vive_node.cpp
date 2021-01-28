@@ -472,8 +472,12 @@ VIVEnode::VIVEnode(int rate)
   , world_offset_({0, 0, 0})
   , world_yaw_(0)
 {
-  nh_.getParam("/vive/world_offset", world_offset_);
-  nh_.getParam("/vive/world_yaw", world_yaw_);
+  std::string rack_type;
+  nh_.getParam("/bot_digger_chassis_type", rack_type);  
+  nh_.getParam("/extrinsics/" + rack_type + "/vive_world/pos", world_offset_);  
+  std::vector<double> world_yaw_vec({0});
+  nh_.getParam("/extrinsics/" + rack_type + "/vive_world/yaw", world_yaw_vec);
+  world_yaw_ = world_yaw_vec[0];
   ROS_INFO(" [VIVE] World offset: [%2.3f , %2.3f, %2.3f] %2.3f", world_offset_[0], world_offset_[1], world_offset_[2], world_yaw_);
   set_origin_server_ = nh_.advertiseService("/vive/set_origin", &VIVEnode::setOriginCB, this);
   twist0_pub_ = nh_.advertise<geometry_msgs::TwistStamped>("/vive/twist0", 10);
