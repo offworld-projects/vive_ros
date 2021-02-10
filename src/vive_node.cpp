@@ -653,6 +653,9 @@ void VIVEnode::Run()
       if (dev_type == 3)
       {
         tf_broadcaster_.sendTransform(tf::StampedTransform(tf, ros::Time::now(), "world_vive", "tracker_"+cur_sn));
+        if(not nh_.hasParam("/vive/tracker_name")){
+          nh_.setParam("/vive/tracker_name", "tracker_"+cur_sn);
+          }
       }
       // It's a lighthouse
       if (dev_type == 4)
